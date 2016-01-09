@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content=
+    "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    name="viewport">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <title>MEMEPAINT - A Project by Declan Freeman-Gleason for all your Rare
+    Memes</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" type=
+    "text/javascript">
+    </script>
+    <script src="/jscookie.js" type="text/javascript">
+    </script><!-- Latest compiled and minified CSS -->
+    <link crossorigin="anonymous" href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    integrity=
+    "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    rel="stylesheet"><!-- Optional theme -->
+    <link crossorigin="anonymous" href=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+    integrity=
+    "sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
+    rel="stylesheet"><!-- Latest compiled and minified JavaScript -->
+
+    <script src=
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+    </script>
+    <style>
+    body {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    }
+    .unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+    }
+    .hidden {
+    display: none;
+    }
+    .center {
+        margin: auto;
+        width: 100%;
+        text-align: center;
+    }
+    .loader {
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        background-color: #808080;
+    }
+    .meme-select {
+    width: 12%;
+    height: 95%;
+    margin: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    position: absolute;
+    z-index: 20;
+    background-color: #FFFFFF;
+    overflow: auto;
+    }
+    .grid-container {
+        width: 100%;
+        padding: 1px;
+        position: relative;
+    }
+    .cell {
+        border-style: solid;
+        border-width: 1px;
+        border-color: black;
+        border-radius: 3px;
+        width: 100%;
+        background-color: #DADADA;
+        padding: 2px;
+        margin-bottom: 1px;
+        cursor: pointer;
+    }
+    .cell:hover {
+        background-color: #C3C3C3;
+    }
+    .cell:active {
+        border-color: #00CCFF;
+        background-color: #FFFFFF;
+        border-width: 2px;
+    }
+    .thumbnail-preview {
+        width: 32px;
+        height: 32px;
+    }
+    .info-floating {
+        position: fixed;
+        bottom: 6px;
+        cursor: default;
+    }
+    #title-name {
+        position: fixed;
+        top: 5;
+        left: 13%;
+        cursor: default;
+    }
+    .notification {
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 3px;
+        background-color: #FFFFFF; 
+        background-color: rgba(200,200,200,150);
+        width: 100%;
+        position: relative;
+    }
+    #notify-container {
+        position: fixed;
+        right: 2px;
+        top: 2px;
+        width: 30%;
+    }
+    #RarePepe {
+    width: 256px;
+    height: 256px;
+    }
+    </style>
+</head>
+<body class="unselectable">
+    <div class="loader">
+        <center>
+            <h1>Loading memes... <!--[ifIE]>
+                <br>
+                You are using Internet Explorer, some features of MEMEPAINT may not work or MEMEPAINT may not work at all.
+                <![endif]--></h1>
+        </center>
+    </div>
+    <div class="unselectable" id="title-name">
+        <h3>MEMEPAINT</h3><br>
+        <span id="title-tag"></span>
+        <h5><span id="title-tag">Paint with meeeemes!</span></h5>
+    </div>
+    <div class="meme-select">
+        <div class="grid-container">
+            <!-- The meme selects will go here -->
+        </div>
+    </div>
+    <canvas id="paint-canvas"></canvas>
+    <div class="center info-floating">
+        <a href="/changelog.md">Changelog</a>&nbsp;&bull;&nbsp;&copy;&nbsp;2015
+        Declan Freeman-Gleason&nbsp;&bull;&nbsp;v.0.1.1&nbsp;
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post"
+        target="_top">
+            <input name="cmd" type="hidden" value="_s-xclick"> <input name=
+            "encrypted" type="hidden" value=
+            "-----BEGIN PKCS7-----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-----END PKCS7-----">
+             <input alt="PayPal - The safer, easier way to pay online!" height=
+            "37px" name="submit" src=
+            "https://declan.firebaseapp.com/PlsGiveMeMoney.png" type="image"
+            width="100%">
+        </form>
+    </div>
+    <script>
+        "use strict";
+        var meme = {};
+        var memes = [];
+        var randInt = 0;
+        var clicks;
+        var canvas = document.getElementById("paint-canvas");
+
+        function cellClick(i) {
+            randInt = memes[i].id;
+            meme.name = memes[randInt].name;
+            meme.image = memes[randInt].image;
+            meme.tag = memes[randInt].tag;
+            meme.audio = memes[randInt].audio;
+            $(document).prop("title", meme.name +
+                "PAINT - A Project by Declan Freeman-Gleason for all your Rare Memes"
+            );
+            //$("#title-tag").html("<h5>" + meme.tag + "<\/h5>");
+            $("#title-name").html("<h2>" + meme.name + "PAINT" + "<\/h2>");
+        }
+
+        function createNotify(heading, text) {
+                $("#notify-container").append(
+                    "<div class=\"notification\"><h2>" + heading +
+                    "<\/h2><br><h4>" + text + "<\/h4><\/div>")
+            }
+            // $("#canvasSave").click(function () {
+            //     canvas.toBlob(function(blob) {
+            //     saveAs(blob, "MEMEPAINT-Screenshot.png");
+            //     });
+            // });
+        $(document).ready(function() {
+            // Make new image objects
+            var pepe = new Image();
+            var doge = new Image();
+            var jcena = new Image();
+            var blbrian = new Image();
+            var kappa = new Image();
+            var gaben = new Image();
+            var shial = new Image();
+            var williew = new Image();
+            var mostinterestingman = new Image();
+            var grumpcat = new Image();
+            var gnomechild = new Image();
+            // Set where the image is
+            pepe.src = "/static/pepe.png";
+            doge.src = "/static/doge.png";
+            jcena.src = "/static/jcena.png";
+            blbrian.src = "/static/blbrian.png";
+            kappa.src = "/static/kappa.png";
+            gaben.src = "/static/gaben.png";
+            shial.src = "/static/shial.png";
+            williew.src = "/static/williew.png";
+            mostinterestingman.src = "/static/mostineterestingman.png";
+            grumpcat.src = "/static/grumpcat.png";
+            gnomechild.src = "/static/gnomechild.png";
+            var height = window.innerHeight - 10;
+            var width = window.innerWidth - 10;
+            meme = {
+                name: null,
+                image: null,
+                tag: null,
+                audio: null
+            };
+            canvas.width = width;
+            canvas.height = height;
+            var canvas2d = canvas.getContext("2d");
+            // Load the ( optional ) audio
+            var andhisnameis = new Audio("/andhisnameis.mp3");
+            var justdoit = new Audio("/justdoit.mp3");
+            // Put the memes into an array
+            memes = [{
+                name: "PEPE",
+                image: pepe,
+                tag: "Feels good man..."
+            }, {
+                name: "DOGE",
+                image: doge,
+                tag: "Such overused meme, much wow"
+            }, {
+                name: "JOHN CENA ",
+                image: jcena,
+                tag: "What's his name?",
+                audio: andhisnameis
+            }, {
+                name: "BAD LUCK BRIAN ",
+                tag: "My photo was worse",
+                image: blbrian
+            }, {
+                name: "KAPPA",
+                tag: "WE ARE KAPPA!",
+                image: kappa
+            }, {
+                name: "GABEN",
+                tag: "Praise our lord and savior",
+                image: gaben
+            }, {
+                name: "SHIA LABEOUF ",
+                tag: "Just do it?",
+                image: shial,
+                audio: justdoit
+            }, {
+                name: "WILLIE WONKA ",
+                tag: "You made a way to paint with memes? Thats so engaging.",
+                image: williew
+            }, {
+                name: "MOST INTERESTING MAN ",
+                tag: "I don't always paint with memes...",
+                image: mostinterestingman
+            }, {
+                name: "GRUMPCAT",
+                tag: ":(",
+                image: grumpcat
+            }, {
+                name: "GNOMECHILD",
+                tag: "I like gnomes",
+                image: gnomechild
+            }];
+            var randNumMin = 0;
+            var i;
+            var stringHidden;
+            // Get the number of memes dynamically, and make buttons for them
+            for (i = 0; typeof memes[i] !== "undefined"; i++) {
+                var randNumMax = i;
+                memes[i].id = i;
+                if (typeof memes[i].audio === "undefined") {
+                    stringHidden = "hidden";
+                } else {
+                    stringHidden = "";
+                }
+                $(".grid-container").append(
+                    "<div class=\"cell\" onclick=\"cellClick(" + i +
+                    ");\" id=\"mselect-" + i +
+                    "\"><img class=\"thumbnail-preview\" alt=\"" +
+                    memes[i].name + " Thumbnail\" src=\"" + memes[i]
+                    .image.src +
+                    "\"><\/img><span class=\"glyphicon glyphicon-volume-up " +
+                    stringHidden +
+                    "\" aria-hidden=\"true\"><\/span><h4>" + memes[i]
+                    .name + "<\/h4><h5>" + memes[i].tag +
+                    "<\/h5><\/div>");
+            }
+            // Randomly select a meme
+            randInt = (Math.floor(Math.random() * (randNumMax -
+                randNumMin + 1)) + randNumMin);
+            // Log the number of memes and the meme chosen
+            console.log(randNumMin + "-" + randNumMax + ":" + randInt);
+            // Set current meme variables
+            meme.name = memes[randInt].name;
+            meme.image = memes[randInt].image;
+            meme.tag = memes[randInt].tag;
+            meme.audio = memes[randInt].audio;
+            $(document).prop("title", meme.name +
+                "PAINT - A Project by Declan Freeman-Gleason for all your Rare Memes"
+            );
+            $("#title-name").html("<h2>" + meme.name + "PAINT" +
+                "<\/h2>");
+            $("#title-tag").html("<h5>" + meme.tag + "<\/h5>");
+            $(".loader").slideUp();
+            $('#paint-canvas').mousedown(function(e) {
+                clicks = 0;
+                if (meme.audio != null) {
+                    meme.audio.play();
+                }
+                // if (typeof Cookies.get(meme) !== "undefined") {
+                //     clicks =  Cookies.get(meme);
+                //     Cookies.set(meme, clicks++);
+                // } else {
+                //     Cookies.set(meme, 1);
+                // }
+                var parentOffset = $(this).parent().offset();
+                //or $(this).offset(); if you really just want the current element's offset
+                var relX = e.pageX - parentOffset.left;
+                var relY = e.pageY - parentOffset.top;
+                canvas2d.drawImage(meme.image, relX - 63, relY -
+                    63, 128, 128);
+            });
+        });
+    </script> 
+</body>
+</html>
