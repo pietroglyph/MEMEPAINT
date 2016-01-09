@@ -1,0 +1,9 @@
+{
+  "firebase": "memepaint",
+  "public": "www",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
