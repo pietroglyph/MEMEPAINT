@@ -7,6 +7,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
     <title>MEMEPAINT - A Project by Declan Freeman-Gleason for all your Rare
     Memes</title>
+    <script src="/FirebaseLocal.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js" type=
     "text/javascript">
     </script>
@@ -25,6 +26,7 @@
     <script src=
     "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
     </script>
+    
     <style>
     body {
     background-color: #FFFFFF;
@@ -113,10 +115,17 @@
         border-style: solid;
         border-width: 1px;
         border-radius: 3px;
-        background-color: #FFFFFF;
+        background-color: #FFFFFF; 
         background-color: rgba(200,200,200,150);
         width: 100%;
         position: relative;
+    }
+    .meme-count {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        font-family: "Helevetica", Arial, sans-serif;
     }
     #notify-container {
         position: fixed;
@@ -168,8 +177,7 @@
             "-----BEGIN PKCS7-----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-----END PKCS7-----">
              <input alt="PayPal - The safer, easier way to pay online!" height=
             "37px" name="submit" src=
-            "https://declan.firebaseapp.com/PlsGiveMeMoney.png" type="image"
-            width="362px">
+            "https://declan.firebaseapp.com/PlsGiveMeMoney.png" type="image">
         </form>
     </div>
     <script>
@@ -179,7 +187,6 @@
         var randInt = 0;
         var clicks;
         var canvas = document.getElementById("paint-canvas");
-        var mouseDown;
 
         function cellClick(i) {
             randInt = memes[i].id;
@@ -187,6 +194,7 @@
             meme.image = memes[randInt].image;
             meme.tag = memes[randInt].tag;
             meme.audio = memes[randInt].audio;
+            meme.id = i;
             $(document).prop("title", meme.name +
                 "PAINT - A Project by Declan Freeman-Gleason for all your Rare Memes"
             );
@@ -205,6 +213,8 @@
             //     });
             // });
         $(document).ready(function() {
+            var firebaseRef = new Firebase("https://memepaint.firebaseio.com/memewithfriends/memes");
+            var firebaseMemeCountRef = new Firebase("https://memepaint.firebaseio.com/memewithfriends");
             // Make new image objects
             var pepe = new Image();
             var doge = new Image();
@@ -325,6 +335,7 @@
             meme.image = memes[randInt].image;
             meme.tag = memes[randInt].tag;
             meme.audio = memes[randInt].audio;
+            meme.id = randInt;
             $(document).prop("title", meme.name +
                 "PAINT - A Project by Declan Freeman-Gleason for all your Rare Memes"
             );
@@ -332,21 +343,12 @@
                 "<\/h2>");
             $("#title-tag").html("<h5>" + meme.tag + "<\/h5>");
             $(".loader").slideUp();
-            //Keep track of if the mouse is up or down ( Thanks Firebase! This code is from their example at https://www.firebase.com/tutorial/#example/drawing)
-            canvas.onmousedown = function () {mouseDown = 1;};
-            canvas.onmouseout = canvas.onmouseup = function () {
-            mouseDown = 0;
-            };
-            $('#paint-canvas').mousedown(drawMeme);
-            $('#paint-canvas').mousemove(drawMeme);
-            function drawMeme(e) {
-                if(!mouseDown) return;
-                // e.preventDefualt();
-                
+            $('#paint-canvas').mousedown(function(e) {
                 clicks = 0;
                 if (meme.audio != null) {
                     meme.audio.play();
                 }
+                console.log(meme);
                 // if (typeof Cookies.get(meme) !== "undefined") {
                 //     clicks =  Cookies.get(meme);
                 //     Cookies.set(meme, clicks++);
@@ -357,9 +359,24 @@
                 //or $(this).offset(); if you really just want the current element's offset
                 var relX = e.pageX - parentOffset.left;
                 var relY = e.pageY - parentOffset.top;
-                canvas2d.drawImage(meme.image, relX - 63, relY - 63, 128, 128);
-            }
+                //canvas2d.drawImage(meme.image, relX - 63, relY - 63, 128, 128);
+                firebaseRef.child(meme.name + ":" + relX + ":" + relY).set({
+                    xPos: relX,
+                    yPos: relY,
+                    id: meme.id,
+                });
+            });
+            firebaseRef.on("child_added", function(snapshot, prevChildKey){
+                var data = snapshot.val();
+                console.log("Meme added event, a meme has been added at " + data.xPos + ", " + data.yPos + " with the ID " + data.id);
+                canvas2d.drawImage(memes[data.id].image, data.xPos - 63, data.yPos -63, 128, 128);
+            });
+            firebaseRef.on("child_changed", function(snapshot, prevChildKey){
+                var data = snapshot.val();
+                console.log("Meme added event, a meme has been added at " + data.xPos + ", " + data.yPos + " with the ID " + data.id);
+                canvas2d.drawImage(memes[data.id].image, data.xPos -63, data.yPos - 63, 128, 128);
+            });
         });
-    </script>
+    </script> 
 </body>
 </html>
