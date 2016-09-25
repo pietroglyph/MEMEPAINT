@@ -208,10 +208,8 @@
         }
 
         $( window ).resize(function() {
-            var oldcanv = canvas;
-            canvas.width = window.innerWidth - 5;
-            canvas.height = window.innerHeight - 5;
-            canvas.drawImage(oldcanv)
+              canvas.width = document.documentElement.clientWidth;
+              canvas.height = document.documentElement.clientHeight;
         });
         
         $(document).ready(function() {
@@ -247,16 +245,14 @@
             shrekd.src = "/static/shrekd.png";
             dicksout.src = "/static/dicksout.png"
             illuminardi.src = "/static/illuminardi.png"
-            var height = window.innerHeight - 5;
-            var width = window.innerWidth - 5;
             meme = {
                 name: null,
                 image: null,
                 tag: null,
                 audio: null
             };
-            canvas.width = width;
-            canvas.height = height;
+          canvas.width = document.documentElement.clientWidth;
+          canvas.height = document.documentElement.clientHeight;
             var canvas2d = canvas.getContext("2d");
             // Load the ( optional ) audio
             var andhisnameis = new Audio("/static/andhisnameis.mp3");
