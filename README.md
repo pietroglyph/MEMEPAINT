@@ -1,5 +1,5 @@
 # MEMEPAINT
-A little sideproject of mine called MEMEPAINT. Basically it draws images of memes and somtimes it plays some audio. It is written in pure clientside code, hopefully you can have fun with it. You can find a live version at memepaint.firebaseapp.com or if that is down perhaps you could try memepaint-pietroglyph.c9users.io.
+A little sideproject of mine called MEMEPAINT. Basically it draws images of memes and somtimes it plays some audio. It is written in JavaScript ( including the multiplayer which uses Firebase ), hopefully you can have fun with it. You can find a live version at memepaint.firebaseapp.com or if that is down perhaps you could try memepaint-pietroglyph.c9users.io.
 
 
 
