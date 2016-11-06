@@ -1,4 +1,3 @@
-
 #MEMEPAINT
 
 MEMEPAINT ( There may be a more up-to-date version at memepaint.firebaseapp.com/changelog.md or memepaint-pietroglyph.c9users.io ) 
