@@ -367,7 +367,17 @@
             $("#title-name").html("<h2>" + meme.name + "PAINT" +
                 "<\/h2>");
             $("#title-tag").html("<h5>" + meme.tag + "<\/h5>");
-            $('#paint-canvas').mousedown(function(e) {
+            $('#paint-canvas').mousedown(drawMeme);
+            $('#paint-canvas').mousemove(drawMeme);
+            document.onmousedown = function () {mousedown = 1;};
+            document.onmouseout = canvas.onmouseup = function () {
+                mousedown = false;
+            };
+            
+            function drawMeme(e) {
+                if (!mousedown) {
+                    return
+                }
                 clicks = 0;
                 if (meme.audio != null) {
                     meme.audio.play();
@@ -390,7 +400,7 @@
                     id: meme.id,
                     timestamp: dateObj.getTime()
                 });
-            });
+            }
             firebaseRef.on("child_added", function(snapshot, prevChildKey){
                 var data = snapshot.val();
                 if (dateObj.getTime() - data.timestamp > 3600000) { 
